@@ -76,6 +76,7 @@ Need to figure out what this actually should be
 (require 'use-package)
 (setq use-package-always-ensure t)
 #+end_src
+**** Straight.el
 
 ** Visual Configuration
 *** themes
@@ -122,23 +123,6 @@ Enables global line numbers except in terminal, emacs shell mode, and org mode
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
-#+end_src
-
-*** Hydra
-This lets me scale text and I think other things but I haven't figured that out yet.
-#+begin_src emacs-lisp
-  (use-package hydra
-  :defer t)
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-
-(efs/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
 
 ** Better Command Configuration
@@ -220,8 +204,27 @@ This is for some keymapping stuff
     "tt" '(counsel-load-theme :which-key "choose theme")
     "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 #+end_src
+*** Hydra
+This lets me scale text and I think other things but I haven't figured that out yet.
+
+Something funky happened when I was changing the order of things and now the efs/leader-keys  function call seems to be stopping emacs from loading which is concerning... I really just have to be better about git tracking. 
+#+begin_src emacs-lisp
+  (use-package hydra
+  :defer t)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+
+;;(efs/leader-keys
+;;  "ts" '(hydra-text-scale/body :which-key "scale text"))
+#+end_src
+
 ** Major Modes
-** Evil Mode
+*** Evil Mode
 Didn't even realize how much I had warmed up to vim editing modes
 #+begin_src emacs-lisp
   (use-package evil
@@ -247,8 +250,8 @@ Didn't even realize how much I had warmed up to vim editing modes
   :config
   (evil-collection-init))
 #+end_src
-** Org Mode
-*** Org Fonts
+*** Org Mode
+**** Org Fonts
 #+begin_src emacs-lisp
     (defun efs/org-font-setup ()
     ;; Replace list hyphen with dot
@@ -277,7 +280,7 @@ Didn't even realize how much I had warmed up to vim editing modes
     (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 #+end_src
-*** Set up Org Mode
+**** Set up Org Mode
 Some notes about Org Capture Syntax
 - %U time stamp
 - %a referencce to location at time of invocation of org capture
@@ -408,7 +411,7 @@ Some notes about Org Capture Syntax
 
   (efs/org-font-setup))
 #+end_src
-*** Org Mode Visual Acutramat 
+**** Org Mode Visual Acutramat 
 #+begin_src emacs-lisp
   (use-package org-bullets
   :after org
@@ -424,7 +427,7 @@ Some notes about Org Capture Syntax
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
 #+end_src
-*** Org Babel
+**** Org Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
   'org-babel-load-languages
@@ -443,8 +446,8 @@ Some notes about Org Capture Syntax
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 #+end_src
-*** Org Roam
-
+**** Org Roam
+Org Roam is the plugin that makes a graph out of a set of notes. 
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
@@ -461,7 +464,24 @@ Some notes about Org Capture Syntax
   :config
   (org-roam-setup))
 #+end_src
-** Projectile
+***** Org Roam UI
+This is an extension to org roam that makes an interactable graph run in a browser.
+#+begin_src emacs-lisp
+  (use-package org-roam-ui
+  ;;:straight
+  ;;  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+#+end_src
+*** Projectile
 Tool for managing projects, can intuit based on files in directory whether you are in a project folder (i.e. looks for files like git or makefiles). 
 meow
 https://docs.projectile.mx/projectile/index.html
@@ -482,7 +502,7 @@ https://docs.projectile.mx/projectile/index.html
   (use-package counsel-projectile
     :config (counsel-projectile-mode))
 #+end_src
-** Magit
+*** Magit
 Git utilit
 #+begin_src emacs-lisp
   (use-package magit
@@ -495,7 +515,7 @@ Git utilit
 (use-package forge
   :after magit)
 #+end_src
-** Dired
+*** Dired
 File Navigation enhancements?
 #+begin_src emacs-lisp
   (use-package dired
@@ -531,10 +551,10 @@ File Navigation enhancements?
 **
 #+begin_src emacs-lisp
 #+end_src
-** IDE Configuration
-*** LSP Configuration
+*** IDE Configuration
+**** LSP Configuration
 Language Server Protocol (LSP)
-**** lsp-mode
+***** lsp-mode
 #+begin_src emacs-lisp
   (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -548,24 +568,24 @@ Language Server Protocol (LSP)
   :config
   (lsp-enable-which-key-integration t))
 #+end_src
-**** lsp-ui
+***** lsp-ui
 #+begin_src emacs-lisp
   (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :custom
   (lsp-ui-doc-position 'bottom))
 #+end_src
-**** lsp-treemacs
+***** lsp-treemacs
 #+begin_src emacs-lisp
   (use-package lsp-treemacs
   :after lsp)
 #+end_src
-**** lsp-ivy
+***** lsp-ivy
 #+begin_src emacs-lisp
   (use-package lsp-ivy
   :after lsp)
 #+end_src
-*** DAP Configuration
+**** DAP Configuration
 
 #+begin_src emacs-lisp
 (use-package dap-mode
@@ -587,7 +607,7 @@ Language Server Protocol (LSP)
     "d" '(dap-hydra t :wk "debugger")))
 #+end_src
 
-*** Completion Engine
+**** Completion Engine
 We use Company Mode as our completion engine
 #+begin_src emacs-lisp
 (use-package company
@@ -605,9 +625,9 @@ We use Company Mode as our completion engine
   :hook (company-mode . company-box-mode))
 #+end_src
 
-*** Languages
-**** Python
-**** Rust
+**** Languages
+***** Python
+***** Rust
 Check out https://github.com/rust-lang/rust-mode. 
-**** JavaScript
-**** 
+***** JavaScript
+***** 

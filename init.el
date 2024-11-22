@@ -76,19 +76,6 @@
 (use-package rainbow-delimiters
 :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package hydra
-  :defer t)
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-
-(efs/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
-
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -149,6 +136,19 @@
   "t"  '(:ignore t :which-key "toggles")
   "tt" '(counsel-load-theme :which-key "choose theme")
   "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
+
+(use-package hydra
+  :defer t)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+
+;;(efs/leader-keys
+;;  "ts" '(hydra-text-scale/body :which-key "scale text"))
 
 (use-package evil
   :init
@@ -369,6 +369,20 @@
          ("C-M-i"    . completion-at-point))
   :config
   (org-roam-setup))
+
+(use-package org-roam-ui
+  ;;:straight
+  ;;  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 (use-package projectile
   :diminish projectile-mode
