@@ -1,0 +1,56 @@
+# Byte-compiled files
+*.elc
+*.eln
+
+# Auto-save and backup files
+*~
+\#*\#
+.\#*
+
+# Package management files
+straight/
+elpa/
+quelpa/
+
+# Cache and temporary files
+var/
+auto-save-list/
+eshell/ # Optional, if your eshell history isn't worth tracking
+transient/history.el
+tramp
+server/
+
+# Project-specific settings
+projectile-bookmarks.eld
+projectile.cache
+
+# Org mode settings and agendas
+org-clock-save.el
+
+# Flycheck/flymake temporary files
+flycheck/
+flymake/
+
+# Temporary files created by other tools
+.TAGS
+*.log
+*.aux
+*.tex~
+*.bak
+
+# System-specific or local customization
+custom.el
+init-local.el
+local/
+
+*.sql
+.extension/vscode/ms-vscode.node-debug2
+.org-id-locations
+bookmarks
+forge-database.sqlite
+history
+init-new.el
+org-collab.org
+org-roam.db
+places
+recentf
