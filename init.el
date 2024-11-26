@@ -505,3 +505,10 @@
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
+
+(use-package rust-mode
+  :init (setq rust-format-on-save t))
+(add-hook 'rust-mode-hook
+        (lambda () (setq indent-tabs-mode nil)))
+(add-hook 'rust-mode-hook
+        (lambda () (prettify-symbols-mode)))

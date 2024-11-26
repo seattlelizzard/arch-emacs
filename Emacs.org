@@ -494,6 +494,7 @@ This is an extension to org roam that makes an interactable graph run in a brows
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 #+end_src
+***** Consult Org Roam
 *** Projectile
 Tool for managing projects, can intuit based on files in directory whether you are in a project folder (i.e. looks for files like git or makefiles). 
 meow
@@ -641,6 +642,14 @@ We use Company Mode as our completion engine
 **** Languages
 ***** Python
 ***** Rust
-Check out https://github.com/rust-lang/rust-mode. 
+Check out https://github.com/rust-lang/rust-mode.
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :init (setq rust-format-on-save t))
+  (add-hook 'rust-mode-hook
+          (lambda () (setq indent-tabs-mode nil)))
+  (add-hook 'rust-mode-hook
+          (lambda () (prettify-symbols-mode)))
+#+end_src
 ***** JavaScript
 ***** 
